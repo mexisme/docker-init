@@ -38,6 +38,7 @@ services:
       - ~/.aws/credentials:/app/.aws/credentials:ro
       - ~/.aws/config:/app/.aws/config:ro
       - docker-aws-cli-cache:/app/.aws/cli/cache
+      - docker-terraform-cache:/app/.terraform
       - .:/app/src
     environment:
       - AWS_DEFAULT_PROFILE
