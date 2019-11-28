@@ -14,5 +14,5 @@ set -e -u
 dnf -y update
 dnf -y install "$@"
 
-# Empty the APT cache, so it doesn't waste space in our image:
+# Empty the DNF cache, so it doesn't waste space in our image:
 dnf clean all
