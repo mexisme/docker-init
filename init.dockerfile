@@ -68,7 +68,9 @@ CMD /bin/sh
 #STOPSIGNAL SIGHUP
 #USER root
 #COPY ${Your Runit Configs}/ /etc/service/
+# NOTE: Debian is /usr/bin, Alpine is /sbin:
 #CMD /usr/bin/runsvdir -P /etc/service
+#CMD /sbin/runsvdir -P /etc/service
 
 
 #####
@@ -80,4 +82,6 @@ CMD /bin/sh
 #ENV SVDIR=/app/service
 #RUN mkdir -p "$SVDIR"
 #COPY ${Your Runit Configs}/ "$SVDIR/"
+# NOTE: Debian is /usr/bin, Alpine is /sbin:
 #CMD /usr/bin/runsvdir -P "$SVDIR"
+#CMD /sbin/runsvdir -P "$SVDIR"
