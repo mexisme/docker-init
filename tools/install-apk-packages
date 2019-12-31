@@ -7,9 +7,9 @@ set -e -u
 
 . `dirname $0`/errors-lib.sh
 
-[ -f /etc/alpine-release ] || eval_exit_code "" warn "'$0' is for Alpine"
+[ -f /etc/alpine-release ] || eval_exit_code "" log_warn "'$0' is for Alpine"
 
-[ -n "$*" ] || eval_exit error "No package names supplied to install"
+[ -n "$*" ] || eval_exit log_error "No package names supplied to install"
 
 apk upgrade --no-cache --update
 apk add --no-cache --update "$@"

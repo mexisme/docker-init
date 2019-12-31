@@ -7,7 +7,7 @@ set -e -u
 
 . `dirname $0`/errors-lib.sh
 
-[ -f /etc/debian_version ] || eval_exit_code "" warn "Not running on Debian"
+[ -f /etc/debian_version ] || eval_exit_code "" log_warn "Not running on Debian"
 
 APT_REPO=""
 APT_DIST=""
@@ -45,14 +45,14 @@ while [ -n "${1:-}" ]; do
       SOURCE_LIST_FILE="$1"; shift
       ;;
     *)
-      eval_exit error "Unrecognised argument '$1'"
+      eval_exit log_error "Unrecognised argument '$1'"
       ;;
   esac
 done
 
 # TODO(willjr): Should really test for values starting with "--" but I really don't want to write *that* code in Bash
-[ -n "$APT_REPO" ] || eval_exit error "--repo not supplied"
-[ -n "$SOURCE_LIST_FILE" ] || eval_exit error "--sourcelistfile not supplied"
+[ -n "$APT_REPO" ] || eval_exit log_error "--repo not supplied"
+[ -n "$SOURCE_LIST_FILE" ] || eval_exit log_error "--sourcelistfile not supplied"
 [ -n "$APT_DIST" ] || APT_DIST="stretch"
 [ -n "$APT_COMPONENTS" ] || APT_COMPONENTS="main"
 

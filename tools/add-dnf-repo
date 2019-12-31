@@ -7,9 +7,9 @@ set -e -u
 
 . `dirname $0`/errors-lib.sh
 
-[ -f /etc/centos-release ] || eval_exit_code "" warn "'$0' is for RedHat / Centos"
+[ -f /etc/centos-release ] || eval_exit_code "" log_warn "'$0' is for RedHat / Centos"
 
-[ -n "$*" ] || evalexit error "No repos supplied to install"
+[ -n "$*" ] || evalexit log_error "No repos supplied to install"
 
 dnf -y update
 dnf -y install 'dnf-command(config-manager)'

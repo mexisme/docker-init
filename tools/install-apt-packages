@@ -7,9 +7,9 @@ set -e -u
 
 . `dirname $0`/errors-lib.sh
 
-[ -f /etc/debian_version ] || eval_exit_code "" warn "'$0' is for Debian"
+[ -f /etc/debian_version ] || eval_exit_code "" log_warn "'$0' is for Debian"
 
-[ -n "$*" ] || eval_exit error "No package names supplied to install"
+[ -n "$*" ] || eval_exit log_error "No package names supplied to install"
 
 apt-get update
 apt-get -y install "$@"

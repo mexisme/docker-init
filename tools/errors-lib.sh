@@ -3,10 +3,10 @@
 # Write log messages to STDERR, prefixing each item after $1 (i.e. $2...)
 # with the contents of $1:
 log() {
-  logLevel="$1"; shift
-  [[ "$logLevel" ]] && logLevel="${logLevel}:"
+  log_level="$1"; shift
+  [[ "$log_level" ]] && log_level="${log_level}:"
   for message in "$@"; do
-    echo "#${logLevel} ${message}" >&2
+    echo "#${log_level} ${message}" >&2
   done
 }
 
@@ -18,10 +18,10 @@ exitp() {
 
 # Run the given command (in $2...) and then exit with $1 as the status code:
 eval_exit_code() {
-  statusCode="${1:-0}"; shift
+  exit_code="${1:-0}"; shift
   [ -n "$*" ] && "$@"
-  [ -n "${statusCode}" ] || exit
-  exit "${statusCode}"
+  [ -n "${exit_code}" ] || exit
+  exit "${exit_code}"
 }
 
 # "Run" the given args as a command, then exit with status code 1:
@@ -30,16 +30,16 @@ eval_exit() {
 }
 
 # Log the given args as an Error;  i.e. log each arg, prefixing with "ERR":
-error() {
+log_error() {
   log ERR "$@"
 }
 
 # Log the given args as an Error;  i.e. log each arg, prefixing with "WARN":
-warn() {
+log_warn() {
   log WARN "$@"
 }
 
 # Log the given args as an Error;  i.e. log each arg, prefixing with "WARN":
-info() {
+log_info() {
   log "" "$@"
 }
