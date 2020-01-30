@@ -30,6 +30,48 @@ Therefore, it's a good idea to try to install all the packages in one command-li
 
 A simple error/logging library for the other shell scripts.
 
+## Using `runit`
+
+This image installs `runit` (http://smarden.org/runit/) in the Alpine and Debian images, as a easily-comprehensible way to support running multiple processes within a single container.
+The main reason for wanting this is to run simple "side car" processes for things like log-forwarding, process-monitoring, or background reconfiguration, when you don't have access to a orchestrator that can manage this for you (like K8s).
+
+In order to enable this in your sub-image, you must copy one of the following sections to it, instead of an `ENTRYPOINT` or `CMD` Dockerfile command.
+
+NOTE: With "runit", you need to tell Docker to Term with SIGHUP instead:
+  https://github.com/peterbourgon/runsvinit
+  https://peter.bourgon.org/blog/2015/09/24/docker-runit-and-graceful-termination.html
+  https://github.com/pixers/runit-docker
+  https://docs.docker.com/engine/reference/builder/#stopsignal
+
+
+### Running multi-process with "runit", run as "root" user, with the various service scripts stored in /etc/services/
+
+_NOTE:_ You'll need to use `chpst` (http://smarden.org/runit/chpst.8.html) or `su` inside your run scripts.
+
+```
+STOPSIGNAL SIGHUP
+USER root
+COPY ${Your Runit Configs}/ /etc/service/
+# Uncomment for Debian, as it's /usr/bin:
+#CMD /usr/bin/runsvdir -P /etc/service
+# Uncomment for Alpine, as it's /sbin:
+#CMD /sbin/runsvdir -P /etc/service
+```
+
+### Running multi-process with "runit", run as "app" user, with the various service scripts stored in /app/services/
+
+```
+STOPSIGNAL SIGHUP
+ENV SVDIR=/app/service
+RUN mkdir -p "$SVDIR"
+COPY ${Your Runit Configs}/ "$SVDIR/"
+# Uncomment for Debian, as it's /usr/bin:
+CMD /usr/bin/runsvdir -P "$SVDIR"
+# Uncomment for Alpine, as it's /sbin:
+CMD /sbin/runsvdir -P "$SVDIR"
+```
+
 # TODO
 
-Convert the scripts to Go, to more-easily support failures, logging, help, etc.
+- Add `runit` to the Centos build.
+- Convert the scripts to Go, to more-easily support failures, logging, help, etc.
