@@ -41,47 +41,9 @@ WORKDIR /app
 ENV PATH=/app/bin:"$PATH"
 
 #####
+# Running multiprocess with "runit" (http://smarden.org/runit/) is explained in the README
+
+#####
 # Running a single process:
 
 CMD /bin/sh
-
-
-#####
-# Running multiprocess with "runit" (http://smarden.org/runit/) :
-#
-# In your child image, you can run multi-process with "runit" by copying one of the below sections
-# into your Dockerfile.
-#
-# NOTE: With "runit", you need to tell Docker to Term with SIGHUP instead:
-#   https://github.com/peterbourgon/runsvinit
-#   https://peter.bourgon.org/blog/2015/09/24/docker-runit-and-graceful-termination.html
-#   https://github.com/pixers/runit-docker
-#   https://docs.docker.com/engine/reference/builder/#stopsignal
-
-
-#####
-# Running multi-process with "runit", run as "root" user, with the various service scripts stored
-# in /etc/services/
-# NOTE: You'll need to use "chpst" (http://smarden.org/runit/chpst.8.html) inside your run scripts:
-
-## (uncomment for multi-process, running "runit" as "root" user)
-#STOPSIGNAL SIGHUP
-#USER root
-#COPY ${Your Runit Configs}/ /etc/service/
-# NOTE: Debian is /usr/bin, Alpine is /sbin:
-#CMD /usr/bin/runsvdir -P /etc/service
-#CMD /sbin/runsvdir -P /etc/service
-
-
-#####
-# Running multi-process with "runit", run as "app" user, with the various service scripts stored
-# in /app/services/
-
-## (uncomment for multi-process, running "runit" as "app" user)
-#STOPSIGNAL SIGHUP
-#ENV SVDIR=/app/service
-#RUN mkdir -p "$SVDIR"
-#COPY ${Your Runit Configs}/ "$SVDIR/"
-# NOTE: Debian is /usr/bin, Alpine is /sbin:
-#CMD /usr/bin/runsvdir -P "$SVDIR"
-#CMD /sbin/runsvdir -P "$SVDIR"
