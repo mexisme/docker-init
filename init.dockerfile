@@ -34,9 +34,13 @@ RUN chmod 555 /usr/local/bin/*
 RUN /usr/local/bin/initialise-docker-image
 RUN /usr/local/bin/create-app-user
 
+COPY --chown=root:root config/etc/ /etc/
+
 # Switch to using the "app" user by default at runtime
 USER app
 WORKDIR /app
+
+COPY --chown=app:app config/user-home/ ./
 
 ENV PATH=/app/bin:"$PATH"
 

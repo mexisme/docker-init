@@ -30,12 +30,15 @@ Therefore, it's a good idea to try to install all the packages in one command-li
 
 A simple error/logging library for the other shell scripts.
 
-## Using `runit`
+## Using `runit` or `monit`
 
-This image installs `runit` (http://smarden.org/runit/) in the Alpine and Debian images, as a easily-comprehensible way to support running multiple processes within a single container.
+This image installs [`runit`](http://smarden.org/runit/) and [`monit`](https://mmonit.com/monit/) in the Alpine and Debian images, as easily-comprehensible ways to support running multiple processes within a single container.
+
 The main reason for wanting this is to run simple "side car" processes for things like log-forwarding, process-monitoring, or background reconfiguration, when you don't have access to a orchestrator that can manage this for you (like K8s).
 
-In order to enable this in your sub-image, you must copy one of the following sections to it, instead of an `ENTRYPOINT` or `CMD` Dockerfile command.
+## Using `runit`
+
+In order to enable [`runit`](http://smarden.org/runit/) in your sub-image, you must copy one of the following sections to it, instead of an `ENTRYPOINT` or `CMD` Dockerfile command.
 
 NOTE: With "runit", you need to tell Docker to Term with SIGHUP instead:
   https://github.com/peterbourgon/runsvinit
@@ -44,7 +47,7 @@ NOTE: With "runit", you need to tell Docker to Term with SIGHUP instead:
   https://docs.docker.com/engine/reference/builder/#stopsignal
 
 
-### Running multi-process with "runit", run as "root" user, with the various service scripts stored in /etc/services/
+### Running multi-process with `runit`, run as "root" user, with the various service scripts stored in /etc/services/
 
 _NOTE:_ You'll need to use `chpst` (http://smarden.org/runit/chpst.8.html) or `su` inside your run scripts.
 
@@ -58,7 +61,7 @@ COPY ${Your Runit Configs}/ /etc/service/
 #CMD /sbin/runsvdir -P /etc/service
 ```
 
-### Running multi-process with "runit", run as "app" user, with the various service scripts stored in /app/services/
+### Running multi-process with `runit`, run as "app" user, with the various service scripts stored in /app/services/
 
 ```
 STOPSIGNAL SIGHUP
@@ -69,6 +72,25 @@ COPY ${Your Runit Configs}/ "$SVDIR/"
 CMD /usr/bin/runsvdir -P "$SVDIR"
 # Uncomment for Alpine, as it's /sbin:
 CMD /sbin/runsvdir -P "$SVDIR"
+```
+
+## Using `monit`
+
+In order to enable [`monit`](https://mmonit.com/monit/) in your sub-image, you must copy one of the following sections to it, instead of an `ENTRYPOINT` or `CMD` Dockerfile command.
+
+### Running multi-process with `monit`, run as "root" user, with the various service scripts stored in /etc/monit.d/
+
+```
+COPY --chown=root:root ${Your Monit Configs} /etc/monit/conf.d/
+USER root
+CMD /usr/bin/monit
+```
+
+### Running multi-process with `monit`, run as "app" user, with the various service scripts stored in /app/monit.d/
+
+```
+COPY --chown=app:app ${Your Monit Configs} /app/monit/conf.d/
+CMD /usr/bin/monit
 ```
 
 # TODO

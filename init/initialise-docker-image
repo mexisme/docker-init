@@ -15,15 +15,18 @@ if [ -f /etc/debian_version ]; then
   apt update
   apt upgrade -y
 
-  # Installs some fairly useful, standard tools for Debian builds
-  install-apt-packages apt-transport-https ca-certificates locales gnupg curl runit
+  # NOTE: "monit" is only in the "backports" repo for the "buster" release:
+  add-apt-repo --repo http://deb.debian.org/debian --distribution buster-backports --components main --sourcelistfile buster-backports
+
+ # Installs some fairly useful, standard tools for Debian builds
+  install-apt-packages apt-transport-https ca-certificates locales gnupg curl runit monit
 
   # Set the Locale to be a UTF-8 variant
   echo 'en_US.UTF-8 UTF-8' >> /etc/locale.gen
   locale-gen
 fi
 
-install-apk-packages ca-certificates curl runit
+install-apk-packages ca-certificates curl runit monit
 
-# NOTE: 'runit' is not available in Centos' default repo's:
+# NOTE: 'runit' or 'monit' are not available in Centos' default repo's:
 install-dnf-packages --nodocs ca-certificates curl glibc-langpack-en
