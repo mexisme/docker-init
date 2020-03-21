@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -x
+
+echo $$ >/app/monit/"$(basename $0)".pid
+
+echo "HELLO"
+ls -laRt /app/monit
+
+sleep 20

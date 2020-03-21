@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -x
+
+echo $$ >/app/monit/"$(basename $0)".pid
+
+sleep 40
+
+ls -laRt /app/monit
+monit quit
