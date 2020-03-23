@@ -8,7 +8,7 @@ services:
   # "app" user and some minimal required packages.
 
   init:
-    image: base:init
+    image: init:${PARENT:-alpine}
     build:
       context: .
       dockerfile: init.dockerfile
@@ -16,7 +16,7 @@ services:
 ##########
 
   aws-tf-setup:
-    image: base:aws-tf
+    image: aws-tf:${PARENT:-alpine}
     depends_on:
       - init
     build:
@@ -31,7 +31,7 @@ services:
     command: /bin/sh -c "chown -R app:app /app/.aws/cli/cache /app/.terraform"
 
   aws-tf:
-    image: base:aws-tf
+    image: aws-tf:${PARENT:-}
     depends_on:
       - aws-tf-setup
     volumes:

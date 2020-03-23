@@ -1,4 +1,5 @@
-FROM base:init as download-terraform
+ARG PARENT=alpine
+FROM init:$PARENT as download-terraform
 
 ARG TERRAFORM_VERSION=0.12.12
 
@@ -10,7 +11,7 @@ ADD --chown=app:app https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION
 RUN unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
     chmod +x /app/terraform
 
-FROM base:init
+FROM init:$PARENT
 
 USER root
 
