@@ -1,10 +1,25 @@
 #!/bin/sh
 
-set -x
+set -eu
 
-echo $$ >/app/monit/"$(basename $0)".pid
+[ "${DEBUG:-}" ] && set -x
 
-sleep 40
+PIDFILE=/app/monit/"$(basename $0)".pid
 
-ls -laRt /app/monit
-monit quit
+
+case "${1:-}" in
+  start)
+    exec /bin/sh -c '
+      echo $$ >"$PIDFILE"
+      sleep 40
+
+      ls -laRt /app/monit
+      monit quit
+    ' &
+    ;;
+
+  stop)
+    kill `cat "$PIDFILE"`
+    rm -v "$PIDFILE"
+    ;;
+esac
